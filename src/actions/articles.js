@@ -1,38 +1,53 @@
-const FETCH_TITLES_REQUEST = 'FETCH_TITLES_REQUEST';
-const FETCH_TITLES_SUCCESS = 'FETCH_TITLES_SUCCESS';
-const FETCH_TITLES_FAILURE = 'FETCH_TITLES_FAILURE';
+//import articles from '../content/articles_ru-RU';
+import transliterationArticles from '../content/articles_transliteration';
 
-const titlesRequested = () => ({
-    type: FETCH_TITLES_REQUEST,
+const FETCH_ARTICLES_REQUEST = 'FETCH_ARTICLES_REQUEST';
+const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS';
+const FETCH_ARTICLES_FAILURE = 'FETCH_ARTICLES_FAILURE';
+const TOGGLE_ARTICLES_TRANSLITERATION = 'TOGGLE_ARTICLES_TRANSLITERATION';
+
+const articlesRequested = () => ({
+    type: FETCH_ARTICLES_REQUEST,
     payload: []
 });
 
-const titlesLoaded = titles => ({
-    type: FETCH_TITLES_SUCCESS,
-    payload: titles
+const articlesLoaded = articles => ({
+    type: FETCH_ARTICLES_SUCCESS,
+    payload: articles
 });
 
-const titlesFetchError = error => ({
-    type: FETCH_TITLES_FAILURE,
+const articlesFetchError = error => ({
+    type: FETCH_ARTICLES_FAILURE,
     payload: error
 });
 
-const fetchTitles = (firebaseService, dispatch) => () => {
-    const db = firebaseService.firestore();
+const toggleArticlesTransliteration = isEnable => ({
+    type: TOGGLE_ARTICLES_TRANSLITERATION,
+    payload: isEnable
+});
 
-    dispatch(titlesRequested());
-    db.collection('titles')
-        .orderBy('from')
-        .limit(100)
-        .get()
-        .then(({docs}) => docs.map(item => item.data()))
-        .then(titles => dispatch(titlesLoaded(titles)))
-        .catch(error => dispatch(titlesFetchError(error)));
-}
+const fetchArticles = dispatch => languageCode => {
+    dispatch(articlesRequested());
+    import(`../content/articles_${languageCode}`)
+        .then(items => {
+            const articlesWithTransliteration = Object.values(items).map(item => {
+                const transliterationItem = transliterationArticles
+                    .find(({ orderNumber }) => orderNumber === item.orderNumber);
+                return {
+                    ...item,
+                    transliterationText: transliterationItem ? transliterationItem.transliterationText : null
+                };
+            });
+            dispatch(articlesLoaded(articlesWithTransliteration));
+        })
+        .catch(error => dispatch(articlesFetchError(error)));
+};
 
 export {
-    FETCH_TITLES_REQUEST,
-    FETCH_TITLES_SUCCESS,
-    FETCH_TITLES_FAILURE,
-    fetchTitles
+    FETCH_ARTICLES_REQUEST,
+    FETCH_ARTICLES_SUCCESS,
+    FETCH_ARTICLES_FAILURE,
+    TOGGLE_ARTICLES_TRANSLITERATION,
+    fetchArticles,
+    toggleArticlesTransliteration
 }

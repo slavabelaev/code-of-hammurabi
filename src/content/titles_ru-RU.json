@@ -2,222 +2,222 @@
   {
     "from": -1,
     "has_divider": true,
-    "title": "Prologue",
+    "title": "Пролог",
     "to": -1
   },
   {
     "from": 1,
-    "title": "Courts and Judiciary",
+    "title": "Суды и судебная система",
     "to": 5
   },
   {
     "from": 6,
-    "title": "Affairs Stolen and Missing Property",
+    "title": "Дело похищенного и пропавшего имущества",
     "to": 13
   },
   {
     "from": 14,
-    "title": "Stealing Children",
+    "title": "Кража детей",
     "to": 14
   },
   {
     "from": 15,
-    "title": "Stealing, Hiding, and Finding Slaves",
+    "title": "Кража, сокрытие и поиск рабов",
     "to": 20
   },
   {
     "from": 21,
-    "title": "Home Invasion, Robbery, Deadly Assault, and Liability",
+    "title": "Вторжение в дом, ограбление, смертельное нападение",
     "to": 24
   },
   {
     "from": 25,
-    "title": "Stealing by Fire Fighters",
+    "title": "Кража при пожаре",
     "to": 25
   },
   {
     "from": 26,
-    "title": "Military Officers and Government Officials Special Laws",
+    "title": "Специальные законы для офицеров и правительственных чиновников",
     "to": 41
   },
   {
     "from": 42,
-    "title": "Fields Contracts and Liability",
+    "title": "Договора о земельных участках",
     "to": 58
   },
   {
     "from": 59,
-    "title": "Orchards Contracts and Liability",
+    "title": "Договора о фруктовых садах",
     "to": 66
   },
   {
     "from": 67,
-    "title": "Real Estate and Tenant Affairs",
+    "title": "Аренда недвижимости",
     "to": 69
   },
   {
     "from": 70,
-    "title": "Merchants Lending and Profits",
+    "title": "Торговое кредитование и прибыль",
     "to": 76
   },
   {
     "from": 77,
-    "title": "Merchants Partnership",
+    "title": "Торговое партнерство",
     "to": "??"
   },
   {
     "from": 108,
-    "title": "Merchants and Jobbers Relations",
+    "title": "Отношения между торговцами и рабочими",
     "to": 108
   },
   {
     "from": 109,
-    "title": "Alewife and Alcohol Sale",
+    "title": "Продажа алкоголя",
     "to": 111
   },
   {
     "from": 112,
-    "title": "Cargo Transportation",
+    "title": "Грузоперевозки",
     "to": 112
   },
   {
     "from": 113,
-    "title": "Loan Fulfillment and Hostage Taking",
+    "title": "Исполнение ссуды, взятие заложников",
     "to": 119
   },
   {
     "from": 120,
-    "title": "Storage and Lodgment",
+    "title": "Содержание и сохранность имущества",
     "to": 126
   },
   {
     "from": 127,
-    "title": "Family, Divorce, Wife Adultery, and Dishonor",
+    "title": "Семья, развод, супружеская измена жены, бесчестие",
     "to": 152
   },
   {
     "from": 153,
-    "title": "Sexual Assault, Daughter Abuse, and Murdering Husband",
+    "title": "Сексуальное насилие, насилие над дочерью, убийство мужа",
     "to": 158
   },
   {
     "from": 159,
-    "title": "Marriage, Dowry and Marriage Endowments",
+    "title": "Брак, приданое, свадебные подарки",
     "to": 164
   },
   {
     "from": 165,
-    "title": "Inheritance",
+    "title": "Наследование",
     "to": 174
   },
   {
     "from": 175,
-    "title": "Inheritance: Endowed Women Marrying a Slave",
+    "title": "Наследование: обеспеченные женщины, выходящие замуж за раба",
     "to": 176
   },
   {
     "from": 177,
-    "title": "Inheritance: Orphans and Remarried Widow",
+    "title": "Наследование: сироты и замужняя вдова",
     "to": 177
   },
   {
     "from": 178,
-    "title": "Inheritance: Priestesses, Palace, and Un-endowed Women",
+    "title": "Наследование: жрицы, дворцы и необеспеченные женщины",
     "to": 182
   },
   {
     "from": 183,
-    "title": "Inheritance: Endowed Concubines",
+    "title": "Наследование: обеспеченные наложницы",
     "to": 184
   },
   {
     "from": 185,
-    "title": "Adoption and Wet Nurse",
+    "title": "Усыновление и кормилица",
     "to": 194
   },
   {
     "from": 195,
-    "title": "Assault",
+    "title": "Насилие",
     "to": 216
   },
   {
     "from": 217,
-    "title": "Doctors and Veterinarians",
+    "title": "Врачи и ветеринары",
     "to": 225
   },
   {
     "from": 226,
-    "title": "Slave Branding",
+    "title": "Знак раба",
     "to": 227
   },
   {
     "from": 228,
-    "title": "Homes, Builders, and Liability",
+    "title": "Дома, строители",
     "to": 233
   },
   {
     "from": 234,
-    "title": "Boats, Boatmen, and Liability",
+    "title": "Лодки, лодочники",
     "to": 240
   },
   {
     "from": 241,
-    "title": "Oxen and Donkeys Renting and Liability",
+    "title": "Аренда быков и ослов",
     "to": 249
   },
   {
     "from": 250,
-    "title": "Ox Liability",
+    "title": "Ответственность за быков",
     "to": 252
   },
   {
     "from": 253,
-    "title": "Field Laborers, Contractors and Liability",
+    "title": "Наемные рабочие, подрядчики",
     "to": 256
   },
   {
     "from": 257,
-    "title": "Unskilled Workers Hiring",
+    "title": "Наем неквалифицированных рабочих",
     "to": 257
   },
   {
     "from": 258,
-    "title": "Cattle Herdsman Hiring",
+    "title": "Наем скотоводов",
     "to": 258
   },
   {
     "from": 259,
-    "title": "Stealing Field Equipment",
+    "title": "Кража инструментов для обработки земельного участка",
     "to": 260
   },
   {
     "from": 261,
-    "title": "Cattle and Sheep Overseer Hiring and Liability",
+    "title": "Найм надзирателя за скотом и овцами",
     "to": 267
   },
   {
     "from": 268,
-    "title": "Working Animals and Carriage Renting",
+    "title": "Аренда животных для выполнения работ и перевозок",
     "to": 273
   },
   {
     "from": 274,
-    "title": "Skilled Workers Hiring",
+    "title": "Наем квалифицированных рабочих",
     "to": 274
   },
   {
     "from": 275,
-    "title": "Boats Renting",
+    "title": "Аренда лодок",
     "to": 277
   },
   {
     "from": 278,
-    "title": "Slaves Buying and Ownership",
+    "title": "Покупка и владение рабами",
     "to": 282
   },
   {
     "from": 999,
-    "title": "Epilogue",
+    "title": "Эпилог",
     "to": 999
   }
 ]
