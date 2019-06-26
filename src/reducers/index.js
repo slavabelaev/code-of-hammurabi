@@ -1,9 +1,11 @@
 import { FETCH_TITLES_REQUEST, FETCH_TITLES_SUCCESS, FETCH_TITLES_FAILURE } from '../actions/titles';
 import { FETCH_ARTICLES_REQUEST, FETCH_ARTICLES_SUCCESS, FETCH_ARTICLES_FAILURE, TOGGLE_ARTICLES_TRANSLITERATION } from '../actions/articles';
 import {CHANGE_LANGUAGE} from "../actions";
+import availableLanguages from "../available-languages";
 
 let languageCode = window.location.pathname.replace(/\//, '');
-languageCode = languageCode.match(/^\w{2}-\w{2}$/) ? languageCode : navigator.language;
+languageCode = availableLanguages[languageCode] ? availableLanguages[languageCode].code : navigator.language.substring(0, 2);
+
 const initialState = {
     titles: {
         isLoaded: false,

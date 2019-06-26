@@ -5,7 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Link from "@material-ui/core/Link";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import Drawer from "@material-ui/core/Drawer";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
@@ -23,6 +23,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import i18n from "./app.i18n";
+import availableLanguages from "../../available-languages";
 // AppContainer
 import ErrorIndicator from '../error-indicator';
 import { compose } from 'redux';
@@ -57,13 +58,16 @@ const useStyles = makeStyles(theme => ({
             display: "none"
         }
     },
-    toolbar: theme.mixins.toolbar,
+    toolbar: {
+        minHeight: theme.mixins.toolbar.minHeight / 2,
+        [theme.breakpoints.up("sm")]: theme.mixins.toolbar
+    },
     drawerPaper: {
         width: drawerWidth
     },
     content: {
         flexGrow: 1,
-        padding: theme.spacing(3)
+        padding: theme.spacing(2)
     },
     transliterationControl: {
         marginLeft: 'auto'
@@ -74,14 +78,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function App({
-     languageCode = 'en-US',
+     languageCode = 'en',
      listItems = [],
      isCheckedSwitch = false,
      container,
      onSwitchToggle,
      onLanguageChange
 }) {
-    const language = i18n[languageCode] || i18n['en-US'];
+    const language = i18n[languageCode] || i18n['en'];
     const classes = useStyles();
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -106,10 +110,7 @@ function App({
     }
 
     const renderLanguageMenu = () => {
-        const languages = [
-            { title: 'English', code: 'en-US' },
-            { title: 'Русский', code: 'ru-RU' },
-        ];
+        const languages = Object.values(availableLanguages);
         return (
             <Menu
                 id="simple-menu"
@@ -198,12 +199,13 @@ function App({
             <nav className={classes.drawer} aria-label="Navigation">
                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
                 <Hidden smUp implementation="css">
-                    <Drawer
+                    <SwipeableDrawer
                         container={container}
                         variant="temporary"
                         anchor={theme.direction === "rtl" ? "right" : "left"}
                         open={mobileOpen}
                         onClose={handleDrawerToggle}
+                        onOpen={handleDrawerToggle}
                         classes={{
                             paper: classes.drawerPaper
                         }}
@@ -212,18 +214,20 @@ function App({
                         }}
                     >
                         {drawer}
-                    </Drawer>
+                    </SwipeableDrawer>
                 </Hidden>
                 <Hidden xsDown implementation="css">
-                    <Drawer
+                    <SwipeableDrawer
                         classes={{
                             paper: classes.drawerPaper
                         }}
                         variant="permanent"
-                        open
+                        open={mobileOpen}
+                        onClose={handleDrawerToggle}
+                        onOpen={handleDrawerToggle}
                     >
                         {drawer}
-                    </Drawer>
+                    </SwipeableDrawer>
                 </Hidden>
             </nav>
             <Container component="main" maxWidth="md" className={classes.content}>
