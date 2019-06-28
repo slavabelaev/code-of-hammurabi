@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
+import Tooltip from "@material-ui/core/Tooltip";
+import Divider from "@material-ui/core/Divider";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Link from "@material-ui/core/Link";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -8,19 +10,17 @@ import Switch from "@material-ui/core/Switch";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import LanguageIcon from "@material-ui/icons/Language";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import i18n from "./app.i18n";
 import availableLanguages from "../../available-languages";
@@ -30,26 +30,27 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { fetchTitles } from '../../actions/titles';
 import { changeLanguage } from '../../actions';
-import { toggleArticlesTransliteration, fetchArticles } from '../../actions/articles';
+import { toggleArticlesTransliteration } from '../../actions/articles';
 import {Container} from "@material-ui/core";
 import AppRouter from "../app-router";
 import { toHashTitle } from '../../utils';
+import Head from '../head';
 
-const drawerWidth = 280;
+const navigationWidth = 280;
 const useStyles = makeStyles(theme => ({
     root: {
         display: "flex"
     },
-    drawer: {
+    navigation: {
         [theme.breakpoints.up("sm")]: {
-            width: drawerWidth,
+            width: navigationWidth,
             flexShrink: 0
         }
     },
     appBar: {
-        marginLeft: drawerWidth,
+        marginLeft: navigationWidth,
         [theme.breakpoints.up("sm")]: {
-            width: `calc(100% - ${drawerWidth}px)`
+            width: `calc(100% - ${navigationWidth}px)`
         }
     },
     menuButton: {
@@ -62,8 +63,8 @@ const useStyles = makeStyles(theme => ({
         minHeight: theme.mixins.toolbar.minHeight / 2,
         [theme.breakpoints.up("sm")]: theme.mixins.toolbar
     },
-    drawerPaper: {
-        width: drawerWidth
+    navigationPaper: {
+        width: navigationWidth
     },
     content: {
         flexGrow: 1,
@@ -74,29 +75,40 @@ const useStyles = makeStyles(theme => ({
     },
     languageButton: {
 
+    },
+    circularProgress: {
+    },
+    listItemsLoremIpsum: {
+        height: 20,
+        width: '100%',
+        backgroundColor: '#f5f5f5',
+        borderRadius: 4
     }
 }));
 
 function App({
-     languageCode = 'en',
-     listItems = [],
-     isCheckedSwitch = false,
-     container,
-     onSwitchToggle,
-     onLanguageChange
+    languageCode = 'en',
+    isLoadedItems,
+    listItems = [],
+    isCheckedSwitch = false,
+    container,
+    onSwitchToggle,
+    onLanguageChange
 }) {
     const language = i18n[languageCode] || i18n['en'];
     const classes = useStyles();
     const theme = useTheme();
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [navigationOpen, setDrawerOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [selectedNavigationItem, setSelectedNavigationItem] = React.useState(null);
 
     function handleDrawerToggle() {
-        setMobileOpen(!mobileOpen);
+        setDrawerOpen(!navigationOpen);
     }
 
-    function handleDrawerClose() {
-        setMobileOpen(false);
+    function handleDrawerClose(selectedNavigationItem) {
+        setDrawerOpen(false);
+        setSelectedNavigationItem(selectedNavigationItem);
     }
 
     function handleOpenLanguageMenu(event) {
@@ -113,7 +125,7 @@ function App({
         const languages = Object.values(availableLanguages);
         return (
             <Menu
-                id="simple-menu"
+                id="language-menu"
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
@@ -121,7 +133,7 @@ function App({
             >
                 {languages.map(({ title, code }) => (
                     <MenuItem
-                        key={code}
+                        key={'language-item-' + code}
                         component={RouterLink}
                         disabled={languageCode === code}
                         to={code}
@@ -134,28 +146,59 @@ function App({
         )
     };
 
-    const drawer = (
-        <div>
-            <List>
-                {listItems.map(({ title, from }, index) => {
-                    return (
+    const fakeContent = (
+        <List>
+            {Array(40).fill(null).map((value, index) => {
+                const width = Math.floor(Math.random() * 70 + 30) + '%';
+                return (
+                    <ListItem
+                        button
+                        key={'navigation-item-' + index}
+                        onClick={handleDrawerClose}
+                    >
+                        <ListItemIcon>
+                            <FiberManualRecordIcon />
+                        </ListItemIcon>
+                        <div className={classes.listItemsLoremIpsum} style={{width}} />
+                    </ListItem>
+                )
+            })}
+        </List>
+    );
+
+    const navigation = isLoadedItems ? (
+        <List>
+            {listItems.map(({ from, title, icon }, index) => {
+                const hashTitle = toHashTitle(title);
+                const hashLink = '#' + hashTitle;
+                const isFirstItem = index === 0;
+                const isPenultimateItem = index === listItems.length - 2;
+                return (
+                    <Fragment key={hashTitle + from}>
                         <ListItem
                             button
+                            selected={selectedNavigationItem === from}
                             component={Link}
-                            href={'#' + toHashTitle(title)}
-                            key={title}
-                            onClick={handleDrawerClose}
+                            href={hashLink}
+                            onClick={event => {
+                                event.preventDefault();
+                                document.scrollingElement.scrollTop = document.getElementById(hashTitle).offsetTop - 80;
+                                handleDrawerClose(from);
+                            }}
                         >
                             <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                <i className="material-icons">
+                                    {icon}
+                                </i>
                             </ListItemIcon>
                             <ListItemText primary={title} />
                         </ListItem>
-                    )
-                })}
-            </List>
-        </div>
-    );
+                        {(isFirstItem || isPenultimateItem) ? <Divider /> : null}
+                    </Fragment>
+                )
+            })}
+        </List>
+    ) : fakeContent;
 
     return (
         <div className={classes.root}>
@@ -165,7 +208,7 @@ function App({
                 <Toolbar>
                     <IconButton
                         color="inherit"
-                        aria-label="Open drawer"
+                        aria-label={language.openDrawer}
                         edge="start"
                         onClick={handleDrawerToggle}
                         className={classes.menuButton}
@@ -185,48 +228,49 @@ function App({
                         label={language.transliteration}
                         className={classes.transliterationControl}
                     />
-                    <IconButton
-                        color="inherit"
-                        aria-label="Open drawer"
-                        edge="start"
-                        onClick={handleOpenLanguageMenu}
-                        className={classes.languageButton}
-                    >
-                        <LanguageIcon />
-                    </IconButton>
+                    <Tooltip title={language.switchLanguage}>
+                        <IconButton
+                            color="inherit"
+                            aria-label={language.switchLanguage}
+                            edge="start"
+                            onClick={handleOpenLanguageMenu}
+                            className={classes.languageButton}
+                        >
+                            <LanguageIcon />
+                        </IconButton>
+                    </Tooltip>
                 </Toolbar>
             </AppBar>
-            <nav className={classes.drawer} aria-label="Navigation">
-                {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+            <nav className={classes.navigation} aria-label={language.navigation}>
                 <Hidden smUp implementation="css">
                     <SwipeableDrawer
                         container={container}
                         variant="temporary"
                         anchor={theme.direction === "rtl" ? "right" : "left"}
-                        open={mobileOpen}
+                        open={navigationOpen}
                         onClose={handleDrawerToggle}
                         onOpen={handleDrawerToggle}
                         classes={{
-                            paper: classes.drawerPaper
+                            paper: classes.navigationPaper
                         }}
                         ModalProps={{
                             keepMounted: true // Better open performance on mobile.
                         }}
                     >
-                        {drawer}
+                        {navigation}
                     </SwipeableDrawer>
                 </Hidden>
                 <Hidden xsDown implementation="css">
                     <SwipeableDrawer
                         classes={{
-                            paper: classes.drawerPaper
+                            paper: classes.navigationPaper
                         }}
                         variant="permanent"
-                        open={mobileOpen}
+                        open={navigationOpen}
                         onClose={handleDrawerToggle}
                         onOpen={handleDrawerToggle}
                     >
-                        {drawer}
+                        {navigation}
                     </SwipeableDrawer>
                 </Hidden>
             </nav>
@@ -260,22 +304,22 @@ class AppContainer extends React.Component {
             changeLanguage
         } = this.props;
 
-        if (!isLoadedTitles) {
-            return <CircularProgress />
-        }
-
         if (titlesFetchError) {
             return <ErrorIndicator error={titlesFetchError} />
         }
 
         return (
-            <App
-                languageCode={languageCode}
-                listItems={titles}
-                isCheckedSwitch={isEnableTransliteration}
-                onSwitchToggle={toggleArticlesTransliteration}
-                onLanguageChange={changeLanguage}
-            />
+            <div>
+                <App
+                    languageCode={languageCode}
+                    isLoadedItems={isLoadedTitles}
+                    listItems={titles}
+                    isCheckedSwitch={isEnableTransliteration}
+                    onSwitchToggle={toggleArticlesTransliteration}
+                    onLanguageChange={changeLanguage}
+                />
+                <Head languageCode={languageCode} />
+            </div>
         )
     }
 }
@@ -288,11 +332,7 @@ const mapStateToProps = ({ titles, articles, languageCode }) => ({
 
 const mapDispatchToProps = dispatch => ({
     fetchTitles: fetchTitles(dispatch),
-    changeLanguage: languageCode => {
-        dispatch(changeLanguage(languageCode));
-        fetchTitles(dispatch)(languageCode);
-        fetchArticles(dispatch)(languageCode)
-    },
+    changeLanguage: languageCode => changeLanguage(dispatch)(languageCode),
     toggleArticlesTransliteration: () => dispatch(toggleArticlesTransliteration())
 });
 

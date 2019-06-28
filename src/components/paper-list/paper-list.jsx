@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core';
 import Paper from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
 // Container
 import {compose} from 'redux';
 import {connect} from 'react-redux';
@@ -32,10 +31,24 @@ const useStyles = makeStyles(theme => ({
     divider: {
         marginTop: 16,
         marginBottom: 16
+    },
+    fakeTitle: {
+        height: 20,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 4,
+        marginBottom: 16,
+        marginTop: 32
+    },
+    fakeContent: {
+        height: 100,
+        backgroundColor: '#f1f1f1',
+        borderRadius: 4,
+        marginBottom: 16
     }
 }));
 
-function CardList({
+function PaperList({
+    isLoaded,
     list = [],
     showSecondaryText
 }) {
@@ -71,10 +84,24 @@ function CardList({
         )
     }
 
-    return (
+    const fakeContent = (
+        <div>
+            {Array(20).fill(null).map((item, index) => {
+                const width = Math.floor(Math.random() * 40 + 60) + '%';
+                return (
+                    <div key={'fakeItem' + index}>
+                        <div className={classes.fakeTitle} style={{width}} />
+                        <div className={classes.fakeContent} />
+                    </div>
+                )
+            })}
+        </div>
+    );
+
+    return isLoaded ? (
         <div>
             {list.map(({ orderNumber, text, secondaryText, sectionTitle, sectionId }) => {
-                return (
+                return (orderNumber !== undefined) ? (
                     <Fragment key={orderNumber + sectionTitle}>
                         {sectionTitle ? (
                             <Typography
@@ -88,17 +115,16 @@ function CardList({
                         ) : null}
                         {renderPaper(orderNumber, text, secondaryText)}
                     </Fragment>
-                )
+                ) : null;
             })}
         </div>
-    )
+    ) : fakeContent;
 }
 
-class CardListContainer extends React.Component {
+class PaperListContainer extends React.Component {
 
     componentDidMount() {
-        const { languageCode = 'en-US' } = this.props;
-        console.log('languageCode1=', languageCode);
+        const { languageCode = 'en' } = this.props;
         this.props.fetchArticles(languageCode);
     }
 
@@ -129,9 +155,9 @@ class CardListContainer extends React.Component {
             return <ErrorIndicator error={articlesError} />
         }
 
-        if (!isLoadedArticles) {
-            return <CircularProgress />
-        }
+        // if (!isLoadedArticles) {
+        //     return <CircularProgress />
+        // }
 
         const list = (articles).map(({ orderNumber, text, transliterationText }) => {
             const sectionTitle = this.getSectionTitle(orderNumber);
@@ -145,7 +171,8 @@ class CardListContainer extends React.Component {
             })
         });
         return (
-            <CardList
+            <PaperList
+                isLoaded={isLoadedArticles}
                 languageCode={languageCode}
                 list={list}
                 showSecondaryText={isEnableTransliteration}
@@ -168,4 +195,4 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps)
-)(CardListContainer)
+)(PaperListContainer)

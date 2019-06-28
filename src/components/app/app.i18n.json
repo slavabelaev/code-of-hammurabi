@@ -1,10 +1,16 @@
 {
   "ru": {
     "title": "Законы Хаммурапи",
-    "transliteration": "Транслитерация"
+    "transliteration": "Транслитерация",
+    "switchLanguage": "Переключить язык",
+    "openDrawer": "Открыть меню навигации",
+    "navigation": "Навигация"
   },
   "en": {
     "title": "Code of Hammurabi",
-    "transliteration": "Transliteration"
+    "transliteration": "Transliteration",
+    "switchLanguage": "Switch Language",
+    "openDrawer": "Open Navigation Menu",
+    "navigation": "Navigation"
   }
 }

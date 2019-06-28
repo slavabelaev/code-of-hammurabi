@@ -17,12 +17,10 @@ const titlesFetchError = error => ({
     payload: error
 });
 
-const fetchTitles = dispatch => (languageCode = 'en-US') => {
+const fetchTitles = dispatch => (languageCode = 'en') => {
     dispatch(titlesRequested());
     import(`../content/titles_${languageCode}`)
-        .then(items => {
-            console.log('items', dispatch(titlesLoaded(items.default)));
-        })
+        .then(items => dispatch(titlesLoaded(items.default)))
         .catch(error => dispatch(titlesFetchError(error)));
 };
 
