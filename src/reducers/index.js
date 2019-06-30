@@ -1,4 +1,5 @@
 import { FETCH_TITLES_REQUEST, FETCH_TITLES_SUCCESS, FETCH_TITLES_FAILURE } from '../actions/titles';
+import { FETCH_COMMENTS_REQUEST, FETCH_COMMENTS_SUCCESS, FETCH_COMMENTS_FAILURE } from '../actions/comments';
 import { FETCH_ARTICLES_REQUEST, FETCH_ARTICLES_SUCCESS, FETCH_ARTICLES_FAILURE, TOGGLE_ARTICLES_TRANSLITERATION } from '../actions/articles';
 import {CHANGE_LANGUAGE} from "../actions";
 import availableLanguages from "../available-languages";
@@ -8,6 +9,11 @@ languageCode = availableLanguages[languageCode] ? availableLanguages[languageCod
 
 const initialState = {
     titles: {
+        isLoaded: false,
+        serviceData: [],
+        error: null
+    },
+    comments: {
         isLoaded: false,
         serviceData: [],
         error: null
@@ -23,6 +29,32 @@ const initialState = {
 
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
+
+        case FETCH_COMMENTS_REQUEST: return {
+            ...state,
+            comments: {
+                isLoaded: false,
+                serviceData: [],
+                error: null
+            }
+        };
+        case FETCH_COMMENTS_SUCCESS: return {
+            ...state,
+            comments: {
+                isLoaded: true,
+                serviceData: action.payload,
+                error: null
+            }
+        };
+        case FETCH_COMMENTS_FAILURE: return {
+            ...state,
+            comments: {
+                isLoaded: true,
+                serviceData: [],
+                error: action.payload
+            }
+        };
+
         case FETCH_TITLES_REQUEST: return {
             ...state,
             titles: {

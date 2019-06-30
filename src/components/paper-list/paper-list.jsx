@@ -1,12 +1,14 @@
 import React, { Fragment } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, withStyles } from '@material-ui/core';
 import Paper from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import Dialog from '@material-ui/core/Dialog';
 // Container
 import {compose} from 'redux';
 import {connect} from 'react-redux';
 import { fetchArticles } from '../../actions/articles';
+import { fetchComments } from '../../actions/comments';
 import ErrorIndicator from '../error-indicator';
 import { toHashTitle } from '../../utils';
 
@@ -44,7 +46,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: '#f1f1f1',
         borderRadius: 4,
         marginBottom: 16
-    }
+    },
 }));
 
 function PaperList({
@@ -66,7 +68,7 @@ function PaperList({
                     </Typography>
                 ) : null}
                 <Typography
-                    component="p"
+                    component="div"
                     className={classes.paperParagraph}
                     dangerouslySetInnerHTML={{__html: text ? text : '...'}}
                 />
@@ -74,7 +76,7 @@ function PaperList({
                     <Fragment>
                         <Divider className={classes.divider} />
                         <Typography
-                            component="p"
+                            component="div"
                             dangerouslySetInnerHTML={{__html: secondaryText ? secondaryText : '...'}}
                             color="textSecondary"
                         />
@@ -121,12 +123,43 @@ function PaperList({
     ) : fakeContent;
 }
 
+const styles = {
+    commentDialog: {
+        padding: 16
+    }
+};
+
 class PaperListContainer extends React.Component {
 
+    state = {
+        isOpenDialog: false,
+        comment: null
+    };
+
     componentDidMount() {
-        const { languageCode = 'en' } = this.props;
-        this.props.fetchArticles(languageCode);
+        const { languageCode = 'en', fetchArticles, fetchComments } = this.props;
+        fetchArticles(languageCode);
+        fetchComments(languageCode);
+
+        document.addEventListener('click', ({ target }) => {
+            if (target['tagName'] === 'SUP'){
+                const commentId = target.getAttribute('comment-id');
+                this.toggleCommentDialog(commentId);
+            }
+        });
     }
+
+    toggleCommentDialog = commentId => {
+        const { comments: {
+                serviceData: comments
+            }
+        } = this.props;
+
+        this.setState(state => ({
+            isOpenDialog: !state.isOpenDialog,
+            comment: comments[commentId]
+        }));
+    };
 
     getSectionTitle(articleTitle) {
         const {
@@ -148,8 +181,10 @@ class PaperListContainer extends React.Component {
                 serviceData: articles,
                 isEnableTransliteration
             },
-            languageCode
+            languageCode,
+            classes
         } = this.props;
+        const { isOpenDialog, comment } = this.state;
 
         if (articlesError) {
             return <ErrorIndicator error={articlesError} />
@@ -170,29 +205,45 @@ class PaperListContainer extends React.Component {
                 sectionId
             })
         });
+
         return (
-            <PaperList
-                isLoaded={isLoadedArticles}
-                languageCode={languageCode}
-                list={list}
-                showSecondaryText={isEnableTransliteration}
-                {...this.props}
-            />
+            <div>
+                <Dialog
+                    open={isOpenDialog}
+                    onClose={this.toggleCommentDialog}
+                >
+                    {comment ? (
+                        <div className={classes.commentDialog}>
+                            {comment}
+                        </div>
+                    ) : <div />}
+                </Dialog>
+                <PaperList
+                    isLoaded={isLoadedArticles}
+                    languageCode={languageCode}
+                    list={list}
+                    showSecondaryText={isEnableTransliteration}
+                    {...this.props}
+                />
+            </div>
         );
     }
 
 }
 
-const mapStateToProps = ({ articles, titles, languageCode }) => ({
+const mapStateToProps = ({ articles, titles, comments, languageCode }) => ({
     articles,
     titles,
+    comments,
     languageCode
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchArticles: fetchArticles(dispatch)
+    fetchArticles: fetchArticles(dispatch),
+    fetchComments: fetchComments(dispatch)
 });
 
 export default compose(
+    withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(PaperListContainer)
