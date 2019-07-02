@@ -1,14 +1,5 @@
-[
-  {
-    "relation": [
-      "delegate_permission/common.handle_all_urls"
-    ],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.example.twa.codeOfHammurabi",
-      "sha256_cert_fingerprints": [
-        "37:EF:80:C2:0F:3C:C7:19:28:33:8E:33:A3:AB:1C:70:A3:64:C8:EA:E1:0E:CD:3A:B5:1A:25:FD:C7:D8:5F:27"
-      ]
-    }
-  }
-]
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { "namespace": "android_app", "package_name": "app.web.twa.code_of_hammurabi",
+               "sha256_cert_fingerprints": ["68:D6:A1:A6:1D:59:C1:B3:74:A9:1C:B6:F0:AE:94:C2:3C:6E:F4:F0:30:4D:BA:19:F7:CE:BC:7A:96:49:1C:36"] }
+}]
